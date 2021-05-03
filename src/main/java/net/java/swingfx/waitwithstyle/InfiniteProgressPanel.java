@@ -29,6 +29,7 @@
 package net.java.swingfx.waitwithstyle;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -44,10 +45,10 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JComponent;
-
-import net.java.swingfx.common.EDTUtils;
+import javax.swing.SwingUtilities;
 
 /**
  * An infinite progress panel displays a rotating figure and a message to notice
@@ -321,7 +322,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     @Override
     public void start() {
         addMouseListener(EmptyMouseListener);
-        EDTUtils.setVisible(this, true);
+        executeOnEventDispatchThread(() -> this.setVisible(true));
         buildTicker();
         animation = new Animator(true);
         if (infiniteProgressAdapter != null) {
@@ -370,7 +371,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
             animation = null;
 
             removeMouseListener(EmptyMouseListener);
-            EDTUtils.setVisible(this, false);
+            executeOnEventDispatchThread(() -> this.setVisible(false));
         }
     }
 
@@ -556,7 +557,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
         @Override
         public void run() {
             GetTicker gt = new GetTicker();
-            EDTUtils.executeOnEDT(gt);
+            executeOnEventDispatchThread(gt);
             Ticker lticker = gt.getTicker();
             if (lticker == null) {
                 return;
@@ -581,7 +582,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
                     }
                 }
 
-                EDTUtils.repaint(InfiniteProgressPanel.this);
+                executeOnEventDispatchThread(() -> InfiniteProgressPanel.this.repaint());
 
                 if (rampUp) {
                     if (alphaLevel < 255) {
@@ -615,8 +616,10 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
 
             if (!rampUp) {
                 started = false;
-                EDTUtils.repaint(InfiniteProgressPanel.this);
-                EDTUtils.setVisible(InfiniteProgressPanel.this, false);
+                executeOnEventDispatchThread(() -> {
+                    InfiniteProgressPanel.this.repaint();
+                    InfiniteProgressPanel.this.setVisible(false);
+                });
                 removeMouseListener(EmptyMouseListener);
             }
         }
@@ -646,5 +649,17 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
         int blue = calculateValue(start.getBlue(), end.getBlue(), percent);
 
         return new Color(red, green, blue);
+    }
+    
+    private static void executeOnEventDispatchThread(Runnable r) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(r);
+            } catch (InterruptedException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
