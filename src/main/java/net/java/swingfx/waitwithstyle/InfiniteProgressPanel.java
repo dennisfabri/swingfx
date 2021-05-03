@@ -47,7 +47,6 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
-import net.java.swingfx.common.ColorUtils;
 import net.java.swingfx.common.EDTUtils;
 
 /**
@@ -417,12 +416,10 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
             g2.fillRect(0, 0, getWidth(), getHeight());
 
             for (int i = 0; i < lticker.bars.length; i++) {
-                // int channel = 224 - 128 / (i + 1);
-                // g2.setColor(new Color(channel, channel, channel, alphaLevel));
                 double part = 2.0 / 3.0;
                 double percent = -1.0 * i / lticker.bars.length;
                 percent = Math.max((percent + part) / part, 0.0);
-                g2.setColor(ColorUtils.calculateColor(colorNormal, colorFocus, percent));
+                g2.setColor(calculateColor(colorNormal, colorFocus, percent));
                 g2.fill(lticker.bars[i]);
             }
 
@@ -648,4 +645,31 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
             }
         }
     }
+    
+    
+    private static int calculateValue(final double start, final double end, final double percent) {
+        final int min = 0;
+        final int max = 255;
+        int value = (int) (start + (Math.max(Math.min(percent, 1.0), -1.0) * (end - start)));
+        value = Math.min(max, value);
+        value = Math.max(min, value);
+        return value;
+    }
+
+    private static Color calculateColor(final Color start, final Color end, final double percent) {
+        if (start == null) {
+            if (end == null) {
+                throw new NullPointerException();
+            }
+            return end;
+        }
+        if (end == null) {
+            return start;
+        }
+        int red = calculateValue(start.getRed(), end.getRed(), percent);
+        int green = calculateValue(start.getGreen(), end.getGreen(), percent);
+        int blue = calculateValue(start.getBlue(), end.getBlue(), percent);
+
+        return new Color(red, green, blue);
+    }    
 }
