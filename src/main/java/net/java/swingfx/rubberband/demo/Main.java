@@ -41,30 +41,29 @@ import net.java.swingfx.rubberband.rubberbands.RectangularRubberBand;
 import net.java.swingfx.rubberband.rubberbands.RubberBand;
 
 /**
- * A simple class with a main method to try out the different rubber band's.
- * The idea is to make the rubber bands flexible and easy to use.
- * Currently, in order for it to work you need to do three things:
+ * A simple class with a main method to try out the different rubber band's. The
+ * idea is to make the rubber bands flexible and easy to use. Currently, in
+ * order for it to work you need to do three things:
  * 
  * 1) Create a JComponent which implements the RubberBandCanvas interface
  *
- * 2) Override the canvas' paintComponent(Graphics g) method so that it calls back
- *    to RubberBand.draw(Graphics g)
- *    
+ * 2) Override the canvas' paintComponent(Graphics g) method so that it calls
+ * back to RubberBand.draw(Graphics g)
+ * 
  * 3) Create a {@link net.java.swingfx.rubberband.rubberbands.RubberBand}
  * 
- * @author rwickesser
- * $Revision: 1.1 $
+ * @author rwickesser $Revision: 1.1 $
  */
 public class Main {
     private static final Dimension SIZE = new Dimension(300, 300);
-    
+
     public static void main(String[] args) {
         // Create RubberBandCanvas
         RubberBandCanvas canvas = new MyPanel();
-        
+
         // Create rubber band
         RubberBand rb = new RectangularRubberBand(canvas);
-        
+
         // Setup demo frame
         JFrame f = new JFrame("Rubber Band Demo");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,23 +76,22 @@ public class Main {
         f.getContentPane().add(canvas.getCanvas());
         f.setVisible(true);
     }
-    
+
     /**
-     * A demonstration on how to create a {@link RubberBandCanvas}.  Note
-     * that paintComponent(Graphics g) has been overridden.
+     * A demonstration on how to create a {@link RubberBandCanvas}. Note that
+     * paintComponent(Graphics g) has been overridden.
      * 
-     * @author rwickesser
-     * $Revision: 1.1 $
+     * @author rwickesser $Revision: 1.1 $
      */
     private static class MyPanel extends JPanel implements RubberBandCanvas, ActionListener {
         private static final long serialVersionUID = 3256445806658466864L;
-        
+
         private RubberBand rubberband;
-        
+
         private JRadioButton radioRect;
         private JRadioButton radioOval;
         private JRadioButton radioAnimRect;
-        
+
         public MyPanel() {
             radioRect = new JRadioButton("Rectangle");
             radioRect.setSelected(true);
@@ -106,7 +104,7 @@ public class Main {
             bg.add(radioRect);
             bg.add(radioOval);
             bg.add(radioAnimRect);
-            
+
             add(radioRect);
             add(radioOval);
             add(radioAnimRect);
@@ -118,32 +116,37 @@ public class Main {
             rubberband.draw(g);
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see RubberBandCanvas#setRubberBand(RubberBand)
          */
         public void setRubberBand(RubberBand rubberband) {
             this.rubberband = rubberband;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see RubberBandCanvas#getCanvas()
          */
         public JComponent getCanvas() {
             return this;
         }
 
-        /* (non-Javadoc)
-         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
             if (radioRect.isSelected()) {
                 rubberband = new RectangularRubberBand(this);
-            }
-            else if (radioOval.isSelected()) {
+            } else if (radioOval.isSelected()) {
                 rubberband = new OvalRubberBand(this);
-            }
-            else if (radioAnimRect.isSelected()) {
-            	rubberband = new AnimatedRectangularRubberBand(this);
+            } else if (radioAnimRect.isSelected()) {
+                rubberband = new AnimatedRectangularRubberBand(this);
             }
         }
     }

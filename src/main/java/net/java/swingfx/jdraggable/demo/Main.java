@@ -37,69 +37,70 @@ import net.java.swingfx.jdraggable.DefaultDraggableManager;
 import net.java.swingfx.jdraggable.DragPolicy;
 import net.java.swingfx.jdraggable.DraggableManager;
 
-
 /**
  * A simple class which shows how JDraggable can be used.
  * 
  * @author craig
- * @since v0.1
- * <br>
- * $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/demo/Main.java,v 1.1 2005/02/26 22:55:45 codecraig Exp $
+ * @since v0.1 <br>
+ *        $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/demo/Main.java,v
+ *        1.1 2005/02/26 22:55:45 codecraig Exp $
  */
 public class Main {
-	public static void main(String[] args) {
-		// Create a Container, in this case a JPanel
-		JPanel draggableContainer = new JPanel();
-		
-		// Register the container as the "draggable container" with a DraggableManager
-		// in this example the DefaultDraggableManager is used.
-		// REMEMBER, you must register the container prior to adding any components to it!!
-		DraggableManager draggableManager = new DefaultDraggableManager(draggableContainer);
-		
-		// set a STRICT Drag Policy, so that only components implementing
-		// the Draggable interface can be dragged.  Try chaning this to DragPolicy.DEFAULT
-		// or DragPolicy.OPEN for a variation.
-		draggableManager.setDragPolicy(DragPolicy.STRICT);
+    public static void main(String[] args) {
+        // Create a Container, in this case a JPanel
+        JPanel draggableContainer = new JPanel();
 
-		// Create a panel which implements the Draggable interface
-		DraggablePanel dragPanel = new DraggablePanel();
-		dragPanel.setPreferredSize(new Dimension(150, 100));
-		
-		// Create a label which implements the Draggable interface
-		DraggableLabel dragLabel = new DraggableLabel("Drag Me!");
-		
-		// Create a normal Swing JLabel
-		JLabel plainLabel = new JLabel("Plain Label");
-		
-		// Create a normal Swing JButton, try chaning the Drag Policy (above)
-		// to something like DragPolicy.OPEN...and watch the button become
-		// draggable!!
-		JButton b = new JButton("Click");
+        // Register the container as the "draggable container" with a DraggableManager
+        // in this example the DefaultDraggableManager is used.
+        // REMEMBER, you must register the container prior to adding any components to
+        // it!!
+        DraggableManager draggableManager = new DefaultDraggableManager(draggableContainer);
 
-		// add an ActionListener to prove the button can be dragged and still
-		// receive it's events
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Clicked..");
-			}
-		});
-		
-		// A normal Swing JTextField
-		JTextField jtf = new JTextField();
-		jtf.setPreferredSize(new Dimension(100, 20));
+        // set a STRICT Drag Policy, so that only components implementing
+        // the Draggable interface can be dragged. Try chaning this to
+        // DragPolicy.DEFAULT
+        // or DragPolicy.OPEN for a variation.
+        draggableManager.setDragPolicy(DragPolicy.STRICT);
 
-		// Add all the components to the "draggable container"
-		draggableContainer.add(dragPanel);
-		draggableContainer.add(dragLabel);
-		draggableContainer.add(plainLabel);
-		draggableContainer.add(b);
-		draggableContainer.add(jtf);
-		
-		// create a frame to display our "draggable container"
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add(draggableContainer, BorderLayout.CENTER);		
-		f.setSize(800, 600);
-		f.setVisible(true);
-	}
+        // Create a panel which implements the Draggable interface
+        DraggablePanel dragPanel = new DraggablePanel();
+        dragPanel.setPreferredSize(new Dimension(150, 100));
+
+        // Create a label which implements the Draggable interface
+        DraggableLabel dragLabel = new DraggableLabel("Drag Me!");
+
+        // Create a normal Swing JLabel
+        JLabel plainLabel = new JLabel("Plain Label");
+
+        // Create a normal Swing JButton, try chaning the Drag Policy (above)
+        // to something like DragPolicy.OPEN...and watch the button become
+        // draggable!!
+        JButton b = new JButton("Click");
+
+        // add an ActionListener to prove the button can be dragged and still
+        // receive it's events
+        b.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked..");
+            }
+        });
+
+        // A normal Swing JTextField
+        JTextField jtf = new JTextField();
+        jtf.setPreferredSize(new Dimension(100, 20));
+
+        // Add all the components to the "draggable container"
+        draggableContainer.add(dragPanel);
+        draggableContainer.add(dragLabel);
+        draggableContainer.add(plainLabel);
+        draggableContainer.add(b);
+        draggableContainer.add(jtf);
+
+        // create a frame to display our "draggable container"
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.getContentPane().add(draggableContainer, BorderLayout.CENTER);
+        f.setSize(800, 600);
+        f.setVisible(true);
+    }
 }

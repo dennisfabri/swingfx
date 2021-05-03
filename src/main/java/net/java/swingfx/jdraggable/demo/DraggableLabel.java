@@ -31,28 +31,30 @@ import javax.swing.border.TitledBorder;
 
 import net.java.swingfx.jdraggable.Draggable;
 
-
 /**
- * A {@link javax.swing.JLabel} which implements the {@link net.java.swingfx.jdraggable.Draggable}
- * interface
+ * A {@link javax.swing.JLabel} which implements the
+ * {@link net.java.swingfx.jdraggable.Draggable} interface
  * 
  * @author craig
- * @since v0.1
- * <br>
- * $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/demo/DraggableLabel.java,v 1.1 2005/02/26 22:55:45 codecraig Exp $
+ * @since v0.1 <br>
+ *        $Header:
+ *        /cvs/swingfx/src/net/java/swingfx/jdraggable/demo/DraggableLabel.java,v
+ *        1.1 2005/02/26 22:55:45 codecraig Exp $
  */
 public class DraggableLabel extends JLabel implements Draggable {
-	private static final long serialVersionUID = 3544671789059028281L;
+    private static final long serialVersionUID = 3544671789059028281L;
 
-	public DraggableLabel(String text) {
-		super(text);
-		setBorder(new TitledBorder(new LineBorder(Color.RED), "JLabel"));
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.codecraig.jdraggable.Draggable#getComponent()
-	 */
-	public Component getComponent() {
-		return this;
-	}
+    public DraggableLabel(String text) {
+        super(text);
+        setBorder(new TitledBorder(new LineBorder(Color.RED), "JLabel"));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.codecraig.jdraggable.Draggable#getComponent()
+     */
+    public Component getComponent() {
+        return this;
+    }
 }

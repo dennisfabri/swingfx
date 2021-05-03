@@ -10,89 +10,88 @@ import javax.swing.SwingUtilities;
 
 public final class EDTUtils {
 
-	private EDTUtils() {
-		// Hide
-	}
+    private EDTUtils() {
+        // Hide
+    }
 
-	public static void setVisible(Component w, boolean v) {
-		executeOnEDT(new VisibilityRunnable(w, v));
-	}
+    public static void setVisible(Component w, boolean v) {
+        executeOnEDT(new VisibilityRunnable(w, v));
+    }
 
-	public static void repaint(Component w) {
-		executeOnEDT(new RepaintRunnable(w));
-	}
+    public static void repaint(Component w) {
+        executeOnEDT(new RepaintRunnable(w));
+    }
 
-	public static boolean executeOnEDT(Runnable r) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			r.run();
-		} else {
-			try {
-				ExceptionRunnable er = new ExceptionRunnable(r);
-				SwingUtilities.invokeAndWait(er);
-				if (er.getThrowable() != null) {
-					throw new RuntimeException("An exception occured while in EDT.", er.getThrowable());
-				}
-			} catch (InterruptedException e) {
-				return false;
-			} catch (InvocationTargetException e) {
-				return false;
-			}
-		}
-		return true;
-	}
+    public static boolean executeOnEDT(Runnable r) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            try {
+                ExceptionRunnable er = new ExceptionRunnable(r);
+                SwingUtilities.invokeAndWait(er);
+                if (er.getThrowable() != null) {
+                    throw new RuntimeException("An exception occured while in EDT.", er.getThrowable());
+                }
+            } catch (InterruptedException e) {
+                return false;
+            } catch (InvocationTargetException e) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	private static class ExceptionRunnable implements Runnable {
+    private static class ExceptionRunnable implements Runnable {
 
-		private Runnable r = null;
-		private Throwable t = null;
+        private Runnable r = null;
+        private Throwable t = null;
 
-		public ExceptionRunnable(Runnable r) {
-			this.r = r;
-		}
+        public ExceptionRunnable(Runnable r) {
+            this.r = r;
+        }
 
-		@Override
-		public void run() {
-			try {
-				r.run();
-			} catch (Exception re) {
-				t = re;
-			}
-		}
+        @Override
+        public void run() {
+            try {
+                r.run();
+            } catch (Exception re) {
+                t = re;
+            }
+        }
 
-		public Throwable getThrowable() {
-			return t;
-		}
-	}
+        public Throwable getThrowable() {
+            return t;
+        }
+    }
 
-	private static class VisibilityRunnable implements Runnable {
+    private static class VisibilityRunnable implements Runnable {
 
-		private Component w;
-		private boolean v;
+        private Component w;
+        private boolean v;
 
-		public VisibilityRunnable(Component w, boolean v) {
-			this.w = w;
-			this.v = v;
-		}
+        public VisibilityRunnable(Component w, boolean v) {
+            this.w = w;
+            this.v = v;
+        }
 
-		@Override
-		public void run() {
-			w.setVisible(v);
-		}
+        @Override
+        public void run() {
+            w.setVisible(v);
+        }
 
-	}
+    }
 
+    private static class RepaintRunnable implements Runnable {
 
-	private static class RepaintRunnable implements Runnable {
+        private Component w;
 
-		private Component w;
+        public RepaintRunnable(Component w) {
+            this.w = w;
+        }
 
-		public RepaintRunnable(Component w) {
-			this.w = w;
-		}
-
-		@Override
-		public void run() {
-			w.repaint();
-		}
-	}
+        @Override
+        public void run() {
+            w.repaint();
+        }
+    }
 }

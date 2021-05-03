@@ -21,8 +21,13 @@
  */
 
 package net.java.swingfx.waitwithstyle;
-import javax.swing.*;
-import java.awt.*;
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -31,24 +36,26 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+
 import net.java.swingfx.common.Utils;
 
 /**
  * Display an animated panel. The panel contains a picture and a text message.
- * As soon as <code>start()</code> is called, the pictures and the text glow
- * in cycles. The animation can be stopped at anytime by calling
+ * As soon as <code>start()</code> is called, the pictures and the text glow in
+ * cycles. The animation can be stopped at anytime by calling
  * <code>stop()</code>. You can set the font and its color by calling
  * <code>setFont()</code> and <code>setForeground()</code>.
  * 
- * @author	Romain Guy, 17/02/2005
- * @since	1.0
- * <br>
- * $Revision: 1.2 $
+ * @author Romain Guy, 17/02/2005
+ * @since 1.0 <br>
+ *        $Revision: 1.2 $
  */
 public class AnimatedPanel extends JPanel {
-	private static final long serialVersionUID = 3257288036894324529L;
-	
-	protected float gradient;
+    private static final long serialVersionUID = 3257288036894324529L;
+
+    protected float gradient;
     protected String message;
     protected Thread animator;
     protected BufferedImage convolvedImage;
@@ -60,16 +67,16 @@ public class AnimatedPanel extends JPanel {
      * Creates an animated panel with a message and a picture.
      * 
      * @param message The message to display, can not be null nor empty.
-     * @param icon The picture to display, can not be null
+     * @param icon    The picture to display, can not be null
      */
     public AnimatedPanel(String message, ImageIcon icon) {
-    	// since the message can not be null or empty, validate it
-    	validateMessage(message);
-    	// the icon can't be null either
-    	if (icon == null) {
-    		throw new IllegalArgumentException("Icon can not be null.");
-    	}
-    	
+        // since the message can not be null or empty, validate it
+        validateMessage(message);
+        // the icon can't be null either
+        if (icon == null) {
+            throw new IllegalArgumentException("Icon can not be null.");
+        }
+
         this.message = message;
 
         Image image = icon.getImage();
@@ -80,7 +87,7 @@ public class AnimatedPanel extends JPanel {
         g.dispose();
 
         brightnessHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        
+
         setBrightness(1.0f);
         setOpaque(false);
     }
@@ -88,25 +95,26 @@ public class AnimatedPanel extends JPanel {
     /**
      * Performs basic validation on the given <code>msg</code>
      * 
-     * @param msg	the message to validate
+     * @param msg the message to validate
      * 
-     * @throws IllegalArgumentException if <code>msg</code> is <code>null</code> or empty
+     * @throws IllegalArgumentException if <code>msg</code> is <code>null</code> or
+     *                                  empty
      */
     private void validateMessage(String msg) throws IllegalArgumentException {
-    	if (Utils.isNullOrEmpty(msg)) {
-    		throw new IllegalArgumentException("Invalid message.  Message can not be null or empty.");
-    	}
+        if (Utils.isNullOrEmpty(msg)) {
+            throw new IllegalArgumentException("Invalid message.  Message can not be null or empty.");
+        }
     }
-    
+
     /**
      * Changes the displayed message at runtime.
      *
      * @param text The message to be displayed. Can not be null or empty.
      */
     public void setText(String text) {
-    	// since the message can not be null or empty, validate it
-    	validateMessage(text);
-    	
+        // since the message can not be null or empty, validate it
+        validateMessage(text);
+
         this.message = text;
         repaint();
     }
@@ -141,13 +149,13 @@ public class AnimatedPanel extends JPanel {
                 g2.drawImage(convolvedImage, x, y, this);
                 Color foreground = getForeground();
                 g2.setColor(new Color(foreground.getRed(), foreground.getGreen(), foreground.getBlue(),
-                                      (int) (gradient * 255)));
+                        (int) (gradient * 255)));
                 layout.draw(g2, (float) (width - bounds.getWidth()) / 2,
-                    (float) (y + convolvedImage.getHeight(null) + bounds.getHeight() + layout.getAscent()));
+                        (float) (y + convolvedImage.getHeight(null) + bounds.getHeight() + layout.getAscent()));
             }
         }
     }
-    
+
     /**
      * Changes the image luminosity.
      */

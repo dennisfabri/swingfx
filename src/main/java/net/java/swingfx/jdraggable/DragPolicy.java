@@ -25,87 +25,87 @@ package net.java.swingfx.jdraggable;
 import java.awt.Component;
 
 /**
- * Abstract class used to define a "Drag Policy".
- * <br>
+ * Abstract class used to define a "Drag Policy". <br>
  * <br>
  * A "Drag Policy" allows the ability for some restrictions to be put in place
- * by a developer.  Currently <code>DragPolicy</code> is setup to only modify
- * the behavior of which {@link java.awt.Component}'s can and can not be dragged.
- * It may be feasible to add more features to <code>DragPolicy</code> in the future.
+ * by a developer. Currently <code>DragPolicy</code> is setup to only modify the
+ * behavior of which {@link java.awt.Component}'s can and can not be dragged. It
+ * may be feasible to add more features to <code>DragPolicy</code> in the
+ * future.
  * 
  * @author craig
- * @since v0.1
- * <br>
- * $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/DragPolicy.java,v 1.1 2005/02/26 22:55:46 codecraig Exp $
+ * @since v0.1 <br>
+ *        $Header:
+ *        /cvs/swingfx/src/net/java/swingfx/jdraggable/DragPolicy.java,v 1.1
+ *        2005/02/26 22:55:46 codecraig Exp $
  */
 abstract public class DragPolicy {
-	/**
-	 * any {@link java.awt.Component} is eligible to be dragged
-	 */
-	private static final byte POLICY_OPEN	= 1 << 0;
-	/**
-	 * only {@link Draggable} objects are eligible to be dragged 
-	 */
-	private static final byte POLICY_STRICT	= 1 << 1;
-	
-	private byte policy;
-	
-	private DragPolicy(byte policy) {
-		this.policy = policy;
-	}
-	
-	/**
-	 * Determines if the given <code>Component</code> is an eligible 
-	 * component to be dragged
-	 * 
-	 * @param comp	the component to check for dragability
-	 * 
-	 * @return	<code>true</code> if the <code>Component</code> is
-	 * 			draggable, <code>false</code> otherwise
-	 * 
-	 * @see Draggable
-	 */
-	abstract public boolean isDraggable(Component comp);
-	
-	/**
-	 * The default drag policy which suggests that all components
-	 * are eligible to be dragged
-	 * 
-	 * @see #OPEN
-	 * @see #STRICT
-	 */
-	public static final DragPolicy DEFAULT = new DragPolicy(POLICY_OPEN) {
-		public boolean isDraggable(Component comp) {
-			return OPEN.isDraggable(comp);
-		}
-	};
-	/**
-	 * The drag policy which suggests that all components are eligible to be
-	 * dragged
-	 * 
-	 * @see #DEFAULT
-	 * @see #STRICT
-	 */
-	public static final DragPolicy OPEN = new DragPolicy(POLICY_OPEN) {
-		public boolean isDraggable(Component comp) {
-			return !(comp == null);
-		}
-	};
-	/**
-	 * The drag policy which suggests that only {@link Draggable} components
-	 * are eligible to be dragged
-	 * 
-	 * @see #DEFAULT
-	 * @see #OPEN
-	 */
-	public static final DragPolicy STRICT = new DragPolicy(POLICY_STRICT) {
-		public boolean isDraggable(Component comp) {
-			if (comp instanceof Draggable) {
-				if (((Draggable) comp).getComponent() != null) {
-					return true;
-				}
-			}
-			return false;
-		}
-	};
+    /**
+     * any {@link java.awt.Component} is eligible to be dragged
+     */
+    private static final byte POLICY_OPEN = 1 << 0;
+    /**
+     * only {@link Draggable} objects are eligible to be dragged
+     */
+    private static final byte POLICY_STRICT = 1 << 1;
+
+    private byte policy;
+
+    private DragPolicy(byte policy) {
+        this.policy = policy;
+    }
+
+    /**
+     * Determines if the given <code>Component</code> is an eligible component to be
+     * dragged
+     * 
+     * @param comp the component to check for dragability
+     * 
+     * @return <code>true</code> if the <code>Component</code> is draggable,
+     *         <code>false</code> otherwise
+     * 
+     * @see Draggable
+     */
+    abstract public boolean isDraggable(Component comp);
+
+    /**
+     * The default drag policy which suggests that all components are eligible to be
+     * dragged
+     * 
+     * @see #OPEN
+     * @see #STRICT
+     */
+    public static final DragPolicy DEFAULT = new DragPolicy(POLICY_OPEN) {
+        public boolean isDraggable(Component comp) {
+            return OPEN.isDraggable(comp);
+        }
+    };
+    /**
+     * The drag policy which suggests that all components are eligible to be dragged
+     * 
+     * @see #DEFAULT
+     * @see #STRICT
+     */
+    public static final DragPolicy OPEN = new DragPolicy(POLICY_OPEN) {
+        public boolean isDraggable(Component comp) {
+            return !(comp == null);
+        }
+    };
+    /**
+     * The drag policy which suggests that only {@link Draggable} components are
+     * eligible to be dragged
+     * 
+     * @see #DEFAULT
+     * @see #OPEN
+     */
+    public static final DragPolicy STRICT = new DragPolicy(POLICY_STRICT) {
+        public boolean isDraggable(Component comp) {
+            if (comp instanceof Draggable) {
+                if (((Draggable) comp).getComponent() != null) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
 }

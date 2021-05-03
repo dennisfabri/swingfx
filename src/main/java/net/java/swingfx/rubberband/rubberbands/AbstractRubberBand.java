@@ -30,17 +30,16 @@ import javax.swing.event.MouseInputAdapter;
 import net.java.swingfx.rubberband.canvas.RubberBandCanvas;
 
 /**
- * An abstract implementation of {@link RubberBand} which handles
- * the basic drawing/setup of the rubber band.
+ * An abstract implementation of {@link RubberBand} which handles the basic
+ * drawing/setup of the rubber band.
  *
  * @author rwickesser
- * @since 1.0
- * $Revision: 1.2 $
+ * @since 1.0 $Revision: 1.2 $
  */
-public abstract class AbstractRubberBand extends MouseInputAdapter implements RubberBand {    
+public abstract class AbstractRubberBand extends MouseInputAdapter implements RubberBand {
     /** the canvas where the rubber band will be drawn onto */
     protected RubberBandCanvas canvas;
-    
+
     /** maintains the size and location of the rubber band */
     protected Rectangle rubberband;
 
@@ -49,56 +48,61 @@ public abstract class AbstractRubberBand extends MouseInputAdapter implements Ru
     /** stores the y coordinate of the mouse pressed event */
     private int pressY;
 
-    /** 
-     * if <code>true</code> then the rubber band will disappear
-     * after the mouse is released, otherwise the rubber band stays
-     * visible until a new rubber band is drawn.  Subclasses
-     * should override 
+    /**
+     * if <code>true</code> then the rubber band will disappear after the mouse is
+     * released, otherwise the rubber band stays visible until a new rubber band is
+     * drawn. Subclasses should override
      */
     private boolean hideOnRelease;
-    
+
     /**
      * Creates a new <code>RubberBand</code> and sets the canvas
      * 
-     * @param canvas    the <code>RubberBandCanvas</code> on which the rubber band
-     *                  will be drawn
-     *                  
+     * @param canvas the <code>RubberBandCanvas</code> on which the rubber band will
+     *               be drawn
+     * 
      * @see #setCanvas(RubberBandCanvas)
      */
     public AbstractRubberBand(RubberBandCanvas canvas) {
         this.canvas = canvas;
         init();
     }
-    
+
     /**
      * Initializes the rubber band
      */
     private void init() {
         rubberband = new Rectangle();
         setHideOnRelease(true);
-        
+
         if (canvas != null) {
             canvas.setRubberBand(this);
             addMouseListeners();
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gui.rubberband.RubberBand#addMouseListeners()
      */
     public void addMouseListeners() {
         canvas.getCanvas().addMouseListener(this);
         canvas.getCanvas().addMouseMotionListener(this);
-   }
+    }
 
-    /* (non-Javadoc)
-	 * @see net.java.swingfx.rubberband.RubberBand#getBounds()
-	 */
-	public Rectangle getBounds() {
-		return rubberband.getBounds();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.java.swingfx.rubberband.RubberBand#getBounds()
+     */
+    public Rectangle getBounds() {
+        return rubberband.getBounds();
+    }
 
-	/* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gui.rubberband.RubberBand#setCanvas(RubberBandCanvas)
      */
     public void setCanvas(RubberBandCanvas canvas) {
@@ -107,12 +111,15 @@ public abstract class AbstractRubberBand extends MouseInputAdapter implements Ru
         addMouseListeners();
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.MouseInputAdapter#mouseDragged(java.awt.event.MouseEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.swing.event.MouseInputAdapter#mouseDragged(java.awt.event.MouseEvent)
      */
     public void mouseDragged(MouseEvent e) {
         updateRubberBand(e);
-        
+
         int x = e.getX();
         int y = e.getY();
         int w = 0;
@@ -123,30 +130,31 @@ public abstract class AbstractRubberBand extends MouseInputAdapter implements Ru
             int tmp = x;
             x = pressX;
             w = tmp - x;
-        }
-        else {
+        } else {
             w = pressX - x;
         }
-        
+
         // adjust y and height
         if (pressY < y) {
             int tmp = y;
             y = pressY;
             h = tmp - y;
-        }
-        else {
+        } else {
             h = pressY - y;
         }
-        
+
         // update rubber band size and location
         update(x, y, w, h);
-        
+
         // repaint the canvas so the rubber band is updated visually
         updateCanvas();
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.MouseInputAdapter#mousePressed(java.awt.event.MouseEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.swing.event.MouseInputAdapter#mousePressed(java.awt.event.MouseEvent)
      */
     public void mousePressed(MouseEvent e) {
         startRubberBand(e);
@@ -157,52 +165,54 @@ public abstract class AbstractRubberBand extends MouseInputAdapter implements Ru
         update(pressX, pressY, 0, 0);
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.MouseInputAdapter#mouseReleased(java.awt.event.MouseEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.swing.event.MouseInputAdapter#mouseReleased(java.awt.event.MouseEvent)
      */
     public void mouseReleased(MouseEvent e) {
         stopRubberBand(e);
 
         // erase the rubber band if hideOnRelease is true
         if (isHideOnRelease()) {
-	        // update rubber band size and location
-	        update(-1, -1, 0, 0);
-	        
-	        // repaint the canvas so the rubber band disappears
-	        updateCanvas();
+            // update rubber band size and location
+            update(-1, -1, 0, 0);
+
+            // repaint the canvas so the rubber band disappears
+            updateCanvas();
         }
     }
-    
+
     /**
      * Makes a call to the canvas' repaint method
      */
     private void updateCanvas() {
         canvas.getCanvas().repaint();
     }
-    
+
     /**
-     * Sets whether the rubber band should disappear when the mouse
-     * is released or not
+     * Sets whether the rubber band should disappear when the mouse is released or
+     * not
      * 
-     * @param hideOnRelease	if <code>true</code> the rubber band will
-     * 						disappear when the mouse is released, if
-     * 						<code>false</code> the rubber band will remain
-     * 						visible until a new rubber band is created
+     * @param hideOnRelease if <code>true</code> the rubber band will disappear when
+     *                      the mouse is released, if <code>false</code> the rubber
+     *                      band will remain visible until a new rubber band is
+     *                      created
      */
     protected void setHideOnRelease(boolean hideOnRelease) {
-    	this.hideOnRelease = hideOnRelease;
+        this.hideOnRelease = hideOnRelease;
     }
-    
+
     /**
-     * Returns whether or not the rubber band should disappear
-     * after the mouse is released
+     * Returns whether or not the rubber band should disappear after the mouse is
+     * released
      * 
-     * @return	<code>true</code> if the rubber band should
-     * 			disappear when the mouse is released, else if
-     * 			<code>false</code> the rubber band should remain
-     * 			visible until a new rubber band is created
+     * @return <code>true</code> if the rubber band should disappear when the mouse
+     *         is released, else if <code>false</code> the rubber band should remain
+     *         visible until a new rubber band is created
      */
     protected boolean isHideOnRelease() {
-    	return hideOnRelease;
+        return hideOnRelease;
     }
 }

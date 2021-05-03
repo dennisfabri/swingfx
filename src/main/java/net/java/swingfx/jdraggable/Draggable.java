@@ -25,19 +25,19 @@ package net.java.swingfx.jdraggable;
 import java.awt.Component;
 
 /**
- * An interface which represents any {@link java.awt.Component} that wants
- * to be dragged within a {@link java.awt.Container}
+ * An interface which represents any {@link java.awt.Component} that wants to be
+ * dragged within a {@link java.awt.Container}
  * 
  * @author craig
- * @since v0.1
- * <br>
- * $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/Draggable.java,v 1.1 2005/02/26 22:55:46 codecraig Exp $
+ * @since v0.1 <br>
+ *        $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/Draggable.java,v
+ *        1.1 2005/02/26 22:55:46 codecraig Exp $
  */
 public interface Draggable {
-	/**
-	 * Returns the actual {@link Component} which is dragged
-	 *  
-	 * @return	the <code>Component</code> which is dragged
-	 */
-	Component getComponent();
+    /**
+     * Returns the actual {@link Component} which is dragged
+     * 
+     * @return the <code>Component</code> which is dragged
+     */
+    Component getComponent();
 }

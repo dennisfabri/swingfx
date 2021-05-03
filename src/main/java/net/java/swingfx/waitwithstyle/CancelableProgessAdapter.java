@@ -1,15 +1,22 @@
 package net.java.swingfx.waitwithstyle;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Cursor;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 
 /**
- * An InfiniteProgressAdapter that adds a cancel button to a CancelableAdaptee (the InfiniteProgressPanel or the
- * PerformanceProgressPanel).
+ * An InfiniteProgressAdapter that adds a cancel button to a CancelableAdaptee
+ * (the InfiniteProgressPanel or the PerformanceProgressPanel).
+ * 
  * @author Michael Bushe michael@bushe.com
  */
 public class CancelableProgessAdapter implements InfiniteProgressAdapter {
@@ -21,24 +28,28 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
 
     /**
      * Construct with an adaptee
-     * @param progressPanel the adaptee, if null, setAdaptee() can be called later (before animation starting) with
-     * a non-null value.
+     * 
+     * @param progressPanel the adaptee, if null, setAdaptee() can be called later
+     *                      (before animation starting) with a non-null value.
      */
     public CancelableProgessAdapter(CancelableAdaptee progressPanel) {
         setAdaptee(progressPanel);
     }
 
     /**
-     * Must be called with a non-null before any of the adaptee's calls to animationStarting, etc. are called.
+     * Must be called with a non-null before any of the adaptee's calls to
+     * animationStarting, etc. are called.
+     * 
      * @param progressPanel
      */
     public void setAdaptee(CancelableAdaptee progressPanel) {
         this.progressPanel = progressPanel;
     }
 
-
     /**
-     * Adds a cancel listener that will be called back when the the cancel button is clicked.
+     * Adds a cancel listener that will be called back when the the cancel button is
+     * clicked.
+     * 
      * @param listener a cancel callback
      */
     public void addCancelListener(ActionListener listener) {
@@ -51,7 +62,9 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
     }
 
     /**
-     * Eemoves a cancel listener that would have been called back when the the cancel button was clicked.
+     * Eemoves a cancel listener that would have been called back when the the
+     * cancel button was clicked.
+     * 
      * @param listener a cancel callback
      */
     public void removeCancelListener(ActionListener listener) {
@@ -61,10 +74,11 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
     }
 
     /**
-     * Overridable to supply your own button.  Overriders should:
+     * Overridable to supply your own button. Overriders should:
      * <ul>
      * <li>Call progresspanel.stop() on action performed.
-     * <li>Set the cursor on their button, else the busy cursor will not indicate to the user that the button is clickable.
+     * <li>Set the cursor on their button, else the busy cursor will not indicate to
+     * the user that the button is clickable.
      * </ul>
      */
     protected JButton createCancelButton() {
@@ -75,15 +89,15 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("defaultButton".equals(evt.getPropertyName())) {
                             /*
-                             * Track the default button every time it changes so that when the cancel
-                             * button becomes the default button, as it must when the user clicks it,
-                             * its possible to reset the default button back to being the button that
-                             * the application expects it to be...
+                             * Track the default button every time it changes so that when the cancel button
+                             * becomes the default button, as it must when the user clicks it, its possible
+                             * to reset the default button back to being the button that the application
+                             * expects it to be...
                              *
-                             * Ideally, the cancel button should never even get focus as a focus change
-                             * is not transparent to application code. A better scheme might be to set
-                             * cancel button to be not focusable and then click the button
-                             * programmatically as appropriate.
+                             * Ideally, the cancel button should never even get focus as a focus change is
+                             * not transparent to application code. A better scheme might be to set cancel
+                             * button to be not focusable and then click the button programmatically as
+                             * appropriate.
                              */
                             JButton oldDefaultButton = (JButton) evt.getOldValue();
                             if (oldDefaultButton != cancelButton) {
@@ -112,14 +126,15 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
     }
 
     /**
-     * Called by the CancelableAdaptee (progress panel) when the animation is starting.  Does nothing by default.
+     * Called by the CancelableAdaptee (progress panel) when the animation is
+     * starting. Does nothing by default.
      */
     public void animationStarting() {
     }
 
     /**
-     * Called by the CancelableAdaptee (progress panel) when the animation is stopping.  Removes the
-     * button from the progressPanel by default.
+     * Called by the CancelableAdaptee (progress panel) when the animation is
+     * stopping. Removes the button from the progressPanel by default.
      */
     public void animationStopping() {
         if (cancelButton != null) {
@@ -132,22 +147,27 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
     }
 
     /**
-     * Called by the CancelableAdaptee (progress panel) when it is finished painting itself.
+     * Called by the CancelableAdaptee (progress panel) when it is finished painting
+     * itself.
      * <p>
      * By default, paints the cancelButton if it is not null.
-     * @param maxY the lowest (on the screen) Y that the adapteee used - you should paint your components before this.
+     * 
+     * @param maxY the lowest (on the screen) Y that the adapteee used - you should
+     *             paint your components before this.
      */
     public void paintSubComponents(double maxY) {
         if (cancelButton != null) {
             int buttonWidth = 80;
-            Rectangle cancelButtonBoundedRectangle = new Rectangle((progressPanel.getComponent().getWidth() / 2 - buttonWidth / 2), (int)maxY + 10, 80, 21);
+            Rectangle cancelButtonBoundedRectangle = new Rectangle(
+                    (progressPanel.getComponent().getWidth() / 2 - buttonWidth / 2), (int) maxY + 10, 80, 21);
             cancelButton.setBounds(cancelButtonBoundedRectangle);
         }
     }
 
     /**
-     * Called by the CancelableAdaptee (progress panel) when the animation's ramp up (fade in) is over.  Adds the
-     * cancel button to the progressPanel by default (if not null), via an invokeLater().
+     * Called by the CancelableAdaptee (progress panel) when the animation's ramp up
+     * (fade in) is over. Adds the cancel button to the progressPanel by default (if
+     * not null), via an invokeLater().
      */
     public void rampUpEnded() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -159,15 +179,16 @@ public class CancelableProgessAdapter implements InfiniteProgressAdapter {
         });
     }
 
-
     /**
-     * Called to programmatically click the cancel button.  Can be called from any thread.
+     * Called to programmatically click the cancel button. Can be called from any
+     * thread.
      */
     public void doCancel() {
         Runnable runner = new Runnable() {
             public void run() {
                 if (cancelButton == null) {
-                    //could be called programmatically, easy way to simulate, don't care about expense
+                    // could be called programmatically, easy way to simulate, don't care about
+                    // expense
                     cancelButton = createCancelButton();
                 }
                 if (cancelButton != null) {

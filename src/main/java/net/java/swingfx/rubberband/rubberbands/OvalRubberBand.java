@@ -27,26 +27,27 @@ import java.awt.Graphics;
 import net.java.swingfx.rubberband.canvas.RubberBandCanvas;
 
 /**
- * An Oval {@link RubberBand} which subclasses {@link RectangularRubberBand}
- * The only difference between the two rubber bands is the
+ * An Oval {@link RubberBand} which subclasses {@link RectangularRubberBand} The
+ * only difference between the two rubber bands is the
  * {@link RubberBand#draw(Graphics)} method
  * 
  * @author rwickesser
- * @since 1.0
- * $Revision: 1.1 $
+ * @since 1.0 $Revision: 1.1 $
  */
 public class OvalRubberBand extends RectangularRubberBand {
-    
-	/**
-	 * Creates a new rubber band which is oval
-	 * 
-	 * @param canvas	the canvas to draw the rubber band on
-	 */
+
+    /**
+     * Creates a new rubber band which is oval
+     * 
+     * @param canvas the canvas to draw the rubber band on
+     */
     public OvalRubberBand(RubberBandCanvas canvas) {
         super(canvas);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gui.rubberband.RubberBand#draw(java.awt.Graphics)
      */
     public void draw(Graphics g) {

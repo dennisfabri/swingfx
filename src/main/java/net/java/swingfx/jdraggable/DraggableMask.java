@@ -25,36 +25,42 @@ package net.java.swingfx.jdraggable;
 import java.awt.Component;
 
 /**
- * A <code>DraggableMask</code> is an object which allows any {@link java.awt.Component}
- * to be "masked" as a {@link net.java.swingfx.jdraggable.Draggable}.  This ability is
- * provided so that implementations of the {@link net.java.swingfx.jdraggable.DraggableManager}
- * can be coded to use the {@link net.java.swingfx.jdraggable.Draggable} interface.
+ * A <code>DraggableMask</code> is an object which allows any
+ * {@link java.awt.Component} to be "masked" as a
+ * {@link net.java.swingfx.jdraggable.Draggable}. This ability is provided so
+ * that implementations of the
+ * {@link net.java.swingfx.jdraggable.DraggableManager} can be coded to use the
+ * {@link net.java.swingfx.jdraggable.Draggable} interface.
  * 
  * @author craig
  * @since v0.1
  * @see net.java.swingfx.jdraggable.DefaultDraggableManager#startDrag(Component)
- * <br>
- * $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/DraggableMask.java,v 1.1 2005/02/26 22:55:45 codecraig Exp $
+ *      <br>
+ *      $Header:
+ *      /cvs/swingfx/src/net/java/swingfx/jdraggable/DraggableMask.java,v 1.1
+ *      2005/02/26 22:55:45 codecraig Exp $
  */
 public class DraggableMask implements Draggable {
-	/**
-	 * the component being "masked"
-	 */
-	private Component component;
-	
-	/**
-	 * Creates a new <code>DraggableMask</code> which masks <code>component</code>
-	 *  
-	 * @param component	the <code>Component</code> to mask
-	 */
-	public DraggableMask(Component component) {
-		this.component = component;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.codecraig.jdraggable.Draggable#getComponent()
-	 */
-	public Component getComponent() {
-		return component;
-	}
+    /**
+     * the component being "masked"
+     */
+    private Component component;
+
+    /**
+     * Creates a new <code>DraggableMask</code> which masks <code>component</code>
+     * 
+     * @param component the <code>Component</code> to mask
+     */
+    public DraggableMask(Component component) {
+        this.component = component;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.codecraig.jdraggable.Draggable#getComponent()
+     */
+    public Component getComponent() {
+        return component;
+    }
 }

@@ -22,31 +22,63 @@
 
 package net.java.swingfx.waitwithstyle;
 
+import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Robot;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.BufferedImage;
+import javax.swing.event.AncestorListener;
 
 /**
- * A InfiniteProgressPanel-like component, but more efficient. This is the preferred class to use unless you need the
- * total control over the appearance that InfiniteProgressPanel gives you.<br /><br />
- * An infinite progress panel displays a rotating figure and a message to notice the user of a long, duration unknown
- * task. The shape and the text are drawn upon a white veil which alpha level (or shield value) lets the underlying
- * component shine through. This panel is meant to be used as a <i>glass pane</i> in the window performing the long
- * operation. <br /><br /> Calling setVisible(true) makes the component visible and starts the animation.
- * Calling setVisible(false) halts the animation and makes the component invisible.
- * Once you've started the animation all the mouse events are intercepted by this panel, preventing them from being
- * forwared to the underlying components. <br /><br /> The panel can be controlled by the <code>setVisible()</code>,
- * method. <br /><br /> 
- * This version of the infinite progress panel does not display any fade in/out when the animation is
- * started/stopped.<br /><br /> 
- * Example: <br /><br />
- * <pre>PerformanceInfiniteProgressPanel pane = new PerformanceInfiniteProgressPanel();
+ * A InfiniteProgressPanel-like component, but more efficient. This is the
+ * preferred class to use unless you need the total control over the appearance
+ * that InfiniteProgressPanel gives you.<br />
+ * <br />
+ * An infinite progress panel displays a rotating figure and a message to notice
+ * the user of a long, duration unknown task. The shape and the text are drawn
+ * upon a white veil which alpha level (or shield value) lets the underlying
+ * component shine through. This panel is meant to be used as a <i>glass
+ * pane</i> in the window performing the long operation. <br />
+ * <br />
+ * Calling setVisible(true) makes the component visible and starts the
+ * animation. Calling setVisible(false) halts the animation and makes the
+ * component invisible. Once you've started the animation all the mouse events
+ * are intercepted by this panel, preventing them from being forwared to the
+ * underlying components. <br />
+ * <br />
+ * The panel can be controlled by the <code>setVisible()</code>, method. <br />
+ * <br />
+ * This version of the infinite progress panel does not display any fade in/out
+ * when the animation is started/stopped.<br />
+ * <br />
+ * Example: <br />
+ * <br />
+ * 
+ * <pre>
+ * PerformanceInfiniteProgressPanel pane = new PerformanceInfiniteProgressPanel();
  * frame.setGlassPane(pane);
  * pane.setVisible(true);
  * // Do something here, presumably launch a new thread
@@ -54,9 +86,10 @@ import java.awt.image.BufferedImage;
  * // When the thread terminates:
  * pane.setVisible(false);
  * </pre>
- * @see InfiniteProgressPanel
- * <br /><br />
- * $Revision: 1.5 $
+ * 
+ * @see InfiniteProgressPanel <br />
+ *      <br />
+ *      $Revision: 1.5 $
  *
  * @author Romain Guy
  * @author Henry Story
@@ -100,9 +133,11 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
 
     /**
      * TODO: finish documentation (see InfiniteProgressPanel)
+     * 
      * @param i_bUseBackBuffer When true a screen capture of the underlying window
-     * is taken. Therefore no update in the background can be visible through this
-     * glass pane. Increases performances.
+     *                         is taken. Therefore no update in the background can
+     *                         be visible through this glass pane. Increases
+     *                         performances.
      */
     public PerformanceInfiniteProgressPanel() {
         this(true);
@@ -132,7 +167,8 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
         this(true, numBars, infiniteProgressAdapter);
     }
 
-    public PerformanceInfiniteProgressPanel(boolean i_bUseBackBuffer, int numBars, InfiniteProgressAdapter infiniteProgressAdapter) {
+    public PerformanceInfiniteProgressPanel(boolean i_bUseBackBuffer, int numBars,
+            InfiniteProgressAdapter infiniteProgressAdapter) {
         useBackBuffer = i_bUseBackBuffer;
         this.numBars = numBars;
         setInfiniteProgressAdapter(infiniteProgressAdapter);
@@ -162,7 +198,8 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
         this.infiniteProgressAdapter = infiniteProgressAdapter;
     }
 
-    int iterate;  //we draw use transparency to draw a number of iterations before making a snapshot
+    int iterate; // we draw use transparency to draw a number of iterations before making a
+                 // snapshot
 
     /**
      * Called to animate the rotation of the bar's colors
@@ -186,7 +223,7 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
                     makeSnapshot();
                     setOpaque(true);
                 } catch (AWTException e1) {
-                    e1.printStackTrace();  //todo: decide what exception to throw
+                    e1.printStackTrace(); // todo: decide what exception to throw
                 }
             } else {
                 iterate--;
@@ -214,8 +251,10 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
                                 w.addComponentListener(componentAdapter);
                             }
                         }
+
                         public void ancestorRemoved(AncestorEvent event) {
                         }
+
                         public void ancestorMoved(AncestorEvent event) {
                         }
                     });
@@ -263,7 +302,8 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
         oRectangle.height -= oInsets.top + oInsets.bottom;
         // capture window contents
         imageBuf = new Robot().createScreenCapture(oRectangle);
-        //no need to fade because we are allready using an image that is showing through
+        // no need to fade because we are allready using an image that is showing
+        // through
     }
 
     /**
@@ -291,8 +331,8 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
             Rectangle oClip = g.getClipBounds();
             if (imageBuf != null) {
                 // draw background image
-               // g.drawImage(imageBuf, 0, 0,
-                 //           null);
+                // g.drawImage(imageBuf, 0, 0,
+                // null);
             } else {
                 g.setColor(new Color(255, 255, 255, 180));
                 g.fillRect(oClip.x, oClip.y, oClip.width, oClip.height);
@@ -306,7 +346,8 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
                 g2.setColor(colors[i + colorOffset]);
                 g2.fill(bars[i]);
             }
-            double maxY = InfiniteProgressPanel.drawTextAt(text, getFont(), g2, getWidth(), barsScreenBounds.getMaxY(), getForeground());
+            double maxY = InfiniteProgressPanel.drawTextAt(text, getFont(), g2, getWidth(), barsScreenBounds.getMaxY(),
+                    getForeground());
             if (infiniteProgressAdapter != null) {
                 infiniteProgressAdapter.paintSubComponents(maxY);
             }
@@ -314,8 +355,9 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
     }
 
     /**
-     * Builds the circular shape and returns the result as an array of <code>Area</code>. Each <code>Area</code> is one
-     * of the bars composing the shape.
+     * Builds the circular shape and returns the result as an array of
+     * <code>Area</code>. Each <code>Area</code> is one of the bars composing the
+     * shape.
      */
     private static Area[] buildTicker(int i_iBarCount) {
         Area[] ticker = new Area[i_iBarCount];
@@ -380,28 +422,33 @@ public class PerformanceInfiniteProgressPanel extends JComponent implements Acti
 
     /**
      * Adds a listener to the cancel button in this progress panel.
-     * @throws RuntimeException if the infiniteProgressAdapter is null or is not a CancelableProgessAdapter
+     * 
+     * @throws RuntimeException if the infiniteProgressAdapter is null or is not a
+     *                          CancelableProgessAdapter
      * @param listener
      */
     public void addCancelListener(ActionListener listener) {
         if (infiniteProgressAdapter instanceof CancelableProgessAdapter) {
-            ((CancelableProgessAdapter)infiniteProgressAdapter).addCancelListener(listener);
+            ((CancelableProgessAdapter) infiniteProgressAdapter).addCancelListener(listener);
         } else {
-            throw new RuntimeException("Expected CancelableProgessAdapter for cancel listener.  Adapter is "+ infiniteProgressAdapter);
+            throw new RuntimeException(
+                    "Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
         }
     }
 
     /**
      * Removes a listener to the cancel button in this progress panel.
-     * @throws RuntimeException if the infiniteProgressAdapter is null or is not a CancelableProgessAdapter
+     * 
+     * @throws RuntimeException if the infiniteProgressAdapter is null or is not a
+     *                          CancelableProgessAdapter
      * @param listener
      */
     public void removeCancelListener(ActionListener listener) {
         if (infiniteProgressAdapter instanceof CancelableProgessAdapter) {
-            ((CancelableProgessAdapter)infiniteProgressAdapter).removeCancelListener(listener);
+            ((CancelableProgessAdapter) infiniteProgressAdapter).removeCancelListener(listener);
         } else {
-            throw new RuntimeException("Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
+            throw new RuntimeException(
+                    "Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
         }
     }
 }
-

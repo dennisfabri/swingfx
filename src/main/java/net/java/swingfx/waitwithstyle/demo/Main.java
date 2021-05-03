@@ -22,34 +22,47 @@
 
 package net.java.swingfx.waitwithstyle.demo;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import net.java.swingfx.waitwithstyle.CancelableAdaptee;
 import net.java.swingfx.waitwithstyle.CancelableProgressPanel;
 import net.java.swingfx.waitwithstyle.PerformanceCancelableProgressPanel;
 
 /**
- * A simple class with a main method to try out the different rubber band's.
- * The idea is to make the rubber bands flexible and easy to use.
- * Currently, in order for it to work you need to do three things:
+ * A simple class with a main method to try out the different rubber band's. The
+ * idea is to make the rubber bands flexible and easy to use. Currently, in
+ * order for it to work you need to do three things:
  * 
  * 1) Create a JComponent which implements the RubberBandCanvas interface
  *
- * 2) Override the canvas' paintComponent(Graphics g) method so that it calls back
- *    to RubberBand.draw(Graphics g)
- *    
+ * 2) Override the canvas' paintComponent(Graphics g) method so that it calls
+ * back to RubberBand.draw(Graphics g)
+ * 
  * 3) Create a {@link net.java.swingfx.rubberband.rubberbands.RubberBand}
  * 
- * @author rwickesser
- * $Revision: 1.1 $
+ * @author rwickesser $Revision: 1.1 $
  */
 public class Main {
     private static final Dimension SIZE = new Dimension(600, 600);
@@ -67,16 +80,16 @@ public class Main {
         f.setLocation(x, y);
         // add canvas to content pane
         f.getContentPane().add(panel);
-        //Enables enter in text fields to be like a "Go"
+        // Enables enter in text fields to be like a "Go"
         f.getRootPane().setDefaultButton(panel.getGoButton());
         f.setVisible(true);
     }
 
     /**
-     * A demonstration on how to create a {@link net.java.swingfx.waitwithstyle.CancelableProgressPanel}.
+     * A demonstration on how to create a
+     * {@link net.java.swingfx.waitwithstyle.CancelableProgressPanel}.
      *
-     * @author Michael Bushe
-     * $Revision: 1.1 $
+     * @author Michael Bushe $Revision: 1.1 $
      */
     private static class MyPanel extends JPanel implements ActionListener {
         private JCheckBox useFastGraphicsCheckBox;
@@ -85,11 +98,11 @@ public class Main {
         private JEditorPane htmlPane;
         private JTextField delayTextField;
 
-
         public MyPanel() {
             super(new BorderLayout());
             useFastGraphicsCheckBox = new JCheckBox("Best Performance");
-            useFastGraphicsCheckBox.setToolTipText("When selected the PerformanceInfiniteProgressPanel is used instead of InfiniteProgressPanel.  It's not perfect yet - mousing over cancel draws two cancel buttons.");
+            useFastGraphicsCheckBox.setToolTipText(
+                    "When selected the PerformanceInfiniteProgressPanel is used instead of InfiniteProgressPanel.  It's not perfect yet - mousing over cancel draws two cancel buttons.");
             urlTextField = new JTextField("http://www.google.com/              ");
             goButton = new JButton("Go");
             goButton.addActionListener(this);
@@ -97,10 +110,12 @@ public class Main {
             htmlPane = new JEditorPane();
             htmlPane.setEditable(false);
             delayTextField = new JTextField("10000");
-            delayTextField.setToolTipText("Set how long a delay is made before the page is loaded.  (Note: Unfortunately, actual page loading is on the EDT)");
-            //Integers only, please.
-            ((AbstractDocument)delayTextField.getDocument()).setDocumentFilter(new DocumentFilter() {
-                public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            delayTextField.setToolTipText(
+                    "Set how long a delay is made before the page is loaded.  (Note: Unfortunately, actual page loading is on the EDT)");
+            // Integers only, please.
+            ((AbstractDocument) delayTextField.getDocument()).setDocumentFilter(new DocumentFilter() {
+                public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                        throws BadLocationException {
                     if (string != null && string.length() > 0) {
                         try {
                             Integer.parseInt(string);
@@ -124,33 +139,34 @@ public class Main {
             add(bottomPanel, BorderLayout.SOUTH);
         }
 
-        /* (non-Javadoc)
-         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
             String sym = urlTextField.getText();
 
-            //Set up the veil
+            // Set up the veil
             CancelableAdaptee veil = null;
             if (useFastGraphicsCheckBox.isSelected()) {
                 veil = new PerformanceCancelableProgressPanel();
-                //THIS DOESN'T WORK YET!
+                // THIS DOESN'T WORK YET!
                 veil.setText("Starting Lookup of " + sym);
             } else {
                 veil = new CancelableProgressPanel("Starting Lookup of " + urlTextField.getText());
             }
             /*
-                Set up the runnable, your code may want something like...
-                if (comp instanceof JComponent) {
-                    rootPane = ((JComponent)comp).getRootPane();
-                } else if (comp instanceof RootPaneContainer) {
-                    rootPane = ((RootPaneContainer)comp).getRootPane();
-                } else {
-                   //probably throw an exception, or get the app's main window.
-                }
-            */
+             * Set up the runnable, your code may want something like... if (comp instanceof
+             * JComponent) { rootPane = ((JComponent)comp).getRootPane(); } else if (comp
+             * instanceof RootPaneContainer) { rootPane =
+             * ((RootPaneContainer)comp).getRootPane(); } else { //probably throw an
+             * exception, or get the app's main window. }
+             */
             JRootPane rootPane = getRootPane();
-            //When using the glass pane approach, restore the old one (jgoodies or something elst may be using it)
+            // When using the glass pane approach, restore the old one (jgoodies or
+            // something elst may be using it)
             Component oldGlassPane = rootPane.getGlassPane();
             LookupWorkerRunnable runnable = new LookupWorkerRunnable(sym, veil, rootPane, oldGlassPane);
             rootPane.setGlassPane(veil.getComponent());
@@ -188,7 +204,7 @@ public class Main {
 
             public void run() {
                 try {
-                    Thread.sleep(Integer.parseInt(delayTextField.getText())/4);
+                    Thread.sleep(Integer.parseInt(delayTextField.getText()) / 4);
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             veil.setText("Yawn! Are you sure you want to load " + request.trim() + "?");
@@ -201,12 +217,12 @@ public class Main {
                         }
                     });
                     Thread.sleep(Integer.parseInt(delayTextField.getText()) / 4);
-                    synchronized(this) {
+                    synchronized (this) {
                         if (!canceled) {
-                            //A real implementation would read the request into an HTMLDocument
-                            //checking for cancel periodically.  This is just a demo, so we'll
-                            //do it cheap and easy, the downside you can't cancel once the
-                            //lookup is in progress.
+                            // A real implementation would read the request into an HTMLDocument
+                            // checking for cancel periodically. This is just a demo, so we'll
+                            // do it cheap and easy, the downside you can't cancel once the
+                            // lookup is in progress.
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
                                     try {
@@ -227,7 +243,7 @@ public class Main {
             }
 
             private void showException(Throwable t) {
-                JOptionPane.showMessageDialog(rootPane, "Exception:"+t);
+                JOptionPane.showMessageDialog(rootPane, "Exception:" + t);
             }
 
             private void tearDown() {
@@ -242,7 +258,8 @@ public class Main {
                     } else {
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                JOptionPane.showMessageDialog(rootPane, "Sorry, you were just a bit late in cancelling the page, fetching the page already.");
+                                JOptionPane.showMessageDialog(rootPane,
+                                        "Sorry, you were just a bit late in cancelling the page, fetching the page already.");
                             }
                         });
                     }

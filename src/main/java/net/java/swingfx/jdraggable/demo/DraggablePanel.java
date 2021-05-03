@@ -31,39 +31,43 @@ import javax.swing.border.TitledBorder;
 
 import net.java.swingfx.jdraggable.Draggable;
 
-
 /**
- * A {@link javax.swing.JPanel} which implements the {@link net.java.swingfx.jdraggable.Draggable}
- * interface.
+ * A {@link javax.swing.JPanel} which implements the
+ * {@link net.java.swingfx.jdraggable.Draggable} interface.
  * 
  * @author craig
- * @since v0.1
- * <br>
- * $Header: /cvs/swingfx/src/net/java/swingfx/jdraggable/demo/DraggablePanel.java,v 1.1 2005/02/26 22:55:45 codecraig Exp $
+ * @since v0.1 <br>
+ *        $Header:
+ *        /cvs/swingfx/src/net/java/swingfx/jdraggable/demo/DraggablePanel.java,v
+ *        1.1 2005/02/26 22:55:45 codecraig Exp $
  */
 public class DraggablePanel extends JPanel implements Draggable {
-	private static final long serialVersionUID = 3256725069878538292L;
-	
-	private TitledBorder border;
-	
-	public DraggablePanel() {
-		border = new TitledBorder(new LineBorder(Color.BLACK), "JPanel (,)");
-		setBorder(border);
-	}
+    private static final long serialVersionUID = 3256725069878538292L;
 
-	/* (non-Javadoc)
-	 * @see java.awt.Component#setLocation(int, int)
-	 */
-	public void setLocation(int x, int y) {
-		super.setLocation(x, y);
-		border.setTitle("JPanel (" + getX() + "," + getY() + ")");
-		repaint();
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.codecraig.jdraggable.Draggable#getComponent()
-	 */
-	public Component getComponent() {
-		return this;
-	}
+    private TitledBorder border;
+
+    public DraggablePanel() {
+        border = new TitledBorder(new LineBorder(Color.BLACK), "JPanel (,)");
+        setBorder(border);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.Component#setLocation(int, int)
+     */
+    public void setLocation(int x, int y) {
+        super.setLocation(x, y);
+        border.setTitle("JPanel (" + getX() + "," + getY() + ")");
+        repaint();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.codecraig.jdraggable.Draggable#getComponent()
+     */
+    public Component getComponent() {
+        return this;
+    }
 }

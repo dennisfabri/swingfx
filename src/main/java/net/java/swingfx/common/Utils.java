@@ -23,31 +23,31 @@
 package net.java.swingfx.common;
 
 /**
- * A utilites class which provides "helper" methods used throughout the SwingFX suite.
- * This class provides a variety of methods which can be accessed in a static way.
+ * A utilites class which provides "helper" methods used throughout the SwingFX
+ * suite. This class provides a variety of methods which can be accessed in a
+ * static way.
  * 
- * @author	craig wickesser, 19/02/2005
- * @since	1.0
- * <br>
- * $Revision: 1.1 $
+ * @author craig wickesser, 19/02/2005
+ * @since 1.0 <br>
+ *        $Revision: 1.1 $
  */
 public class Utils {
 
-	private Utils() {}
-	
-	/**
-	 * Determines if the given <code>String</code> is <code>null</code> or
-	 * empty
-	 * 
-	 * @param val	the <code>String</code> to check
-	 * 
-	 * @return	<code>true</code> if <code>val</code> is <code>null</code> or
-	 * 			empty, <code>false</code> otherwise
-	 */
-	public static boolean isNullOrEmpty(String val) {
-		if (val == null || val.equals("")) {
-			return true;
-		}
-		return false;
-	}
+    private Utils() {
+    }
+
+    /**
+     * Determines if the given <code>String</code> is <code>null</code> or empty
+     * 
+     * @param val the <code>String</code> to check
+     * 
+     * @return <code>true</code> if <code>val</code> is <code>null</code> or empty,
+     *         <code>false</code> otherwise
+     */
+    public static boolean isNullOrEmpty(String val) {
+        if (val == null || val.equals("")) {
+            return true;
+        }
+        return false;
+    }
 }

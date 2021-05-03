@@ -91,59 +91,58 @@ import net.java.swingfx.common.EDTUtils;
  */
 
 public class InfiniteProgressPanel extends JComponent implements CancelableAdaptee {
-    private static final long         serialVersionUID        = 3546080263571714356L;
+    private static final long serialVersionUID = 3546080263571714356L;
 
-    private static MouseListener      EmptyMouseListener      = new MouseAdapter() {
-                                                              };
+    private static MouseListener EmptyMouseListener = new MouseAdapter() {
+    };
 
-    private static final int          SCALE                   = 4;
+    private static final int SCALE = 4;
 
     /** Contains the bars composing the circular shape. */
-    protected Ticker                  ticker                  = null;
+    private Ticker ticker = null;
     /**
      * The animation thread is responsible for fade in/out and rotation.
      */
-    protected Animator                animation               = null;
+    private Animator animation = null;
     /**
      * Notifies whether the animation is running or not.
      */
-    protected boolean                 started                 = false;
+    private boolean started = false;
     /**
      * Alpha level of the veil, used for fade in/out.
      */
-    protected int                     alphaLevel              = 0;
+    private int alphaLevel = 0;
     /**
      * Duration of the veil's fade in/out.
      */
-    protected int                     rampDelay               = 300;
+    private int rampDelay = 300;
     /**
      * Alpha level of the veil.
      */
-    protected float                   shield                  = 0.70f;
+    private float shield = 0.70f;
     /**
      * Message displayed below the circular shape.
      */
-    protected String                  text                    = "";
+    private String text = "";
     /**
      * Amount of bars composing the circular shape.
      */
-    protected int                     barsCount               = 16;
+    private int barsCount = 16;
     /**
      * Amount of frames per seconde. Lowers this to save CPU.
      */
-    protected float                   fps                     = 10.0f;
+    private float fps = 10.0f;
     /**
      * Rendering hints to set anti aliasing.
      */
-    protected RenderingHints          hints                   = null;
+    private RenderingHints hints = null;
     /**
-     * An infiniteProgressAdapter to performa special drawing, ex: a cancel
-     * button.
+     * An infiniteProgressAdapter to performa special drawing, ex: a cancel button.
      */
     protected InfiniteProgressAdapter infiniteProgressAdapter = null;
 
-    private static Color              colorNormal             = new Color(200, 200, 200);
-    private static Color              colorFocus              = new Color(804, 22, 188);
+    private static Color colorNormal = new Color(200, 200, 200);
+    private static Color colorFocus = new Color(804, 22, 188);
 
     /**
      * Creates a new progress panel with default values:<br />
@@ -168,8 +167,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
      * <li>Fade in/out last 300 ms</li>
      * </ul>
      * 
-     * @param text
-     *            The message to be displayed. Can be null or empty.
+     * @param text The message to be displayed. Can be null or empty.
      */
     public InfiniteProgressPanel(String text) {
         this(text, 16);
@@ -183,10 +181,8 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
      * <li>Fade in/out last 300 ms</li>
      * </ul>
      * 
-     * @param text
-     *            The message to be displayed. Can be null or empty.
-     * @param barsCount
-     *            The amount of bars composing the circular shape
+     * @param text      The message to be displayed. Can be null or empty.
+     * @param barsCount The amount of bars composing the circular shape
      */
     public InfiniteProgressPanel(String text, int barsCount) {
         this(text, barsCount, 0.70f);
@@ -199,13 +195,10 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
      * <li>Fade in/out last 300 ms</li>
      * </ul>
      * 
-     * @param text
-     *            The message to be displayed. Can be null or empty.
-     * @param barsCount
-     *            The amount of bars composing the circular shape.
-     * @param shield
-     *            The alpha level between 0.0 and 1.0 of the colored shield (or
-     *            veil).
+     * @param text      The message to be displayed. Can be null or empty.
+     * @param barsCount The amount of bars composing the circular shape.
+     * @param shield    The alpha level between 0.0 and 1.0 of the colored shield
+     *                  (or veil).
      */
     public InfiniteProgressPanel(String text, int barsCount, float shield) {
         this(text, barsCount, shield, 10.0f);
@@ -217,16 +210,12 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
      * <li>Fade in/out last 300 ms</li>
      * </ul>
      * 
-     * @param text
-     *            The message to be displayed. Can be null or empty.
-     * @param barsCount
-     *            The amount of bars composing the circular shape.
-     * @param shield
-     *            The alpha level between 0.0 and 1.0 of the colored shield (or
-     *            veil).
-     * @param fps
-     *            The number of frames per second. Lower this value to decrease
-     *            CPU usage.
+     * @param text      The message to be displayed. Can be null or empty.
+     * @param barsCount The amount of bars composing the circular shape.
+     * @param shield    The alpha level between 0.0 and 1.0 of the colored shield
+     *                  (or veil).
+     * @param fps       The number of frames per second. Lower this value to
+     *                  decrease CPU usage.
      */
     public InfiniteProgressPanel(String text, int barsCount, float shield, float fps) {
         this(text, barsCount, shield, fps, 300);
@@ -235,19 +224,14 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     /**
      * Creates a new progress panel.
      * 
-     * @param text
-     *            The message to be displayed. Can be null or empty.
-     * @param barsCount
-     *            The amount of bars composing the circular shape.
-     * @param shield
-     *            The alpha level between 0.0 and 1.0 of the colored shield (or
-     *            veil).
-     * @param fps
-     *            The number of frames per second. Lower this value to decrease
-     *            CPU usage.
-     * @param rampDelay
-     *            The duration, in milli seconds, of the fade in and the fade
-     *            out of the veil.
+     * @param text      The message to be displayed. Can be null or empty.
+     * @param barsCount The amount of bars composing the circular shape.
+     * @param shield    The alpha level between 0.0 and 1.0 of the colored shield
+     *                  (or veil).
+     * @param fps       The number of frames per second. Lower this value to
+     *                  decrease CPU usage.
+     * @param rampDelay The duration, in milli seconds, of the fade in and the fade
+     *                  out of the veil.
      */
     public InfiniteProgressPanel(String text, int barsCount, float shield, float fps, int rampDelay) {
         this.text = text;
@@ -265,8 +249,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     /**
      * Changes the displayed message at runtime.
      * 
-     * @param text
-     *            The message to be displayed. Can be null or empty.
+     * @param text The message to be displayed. Can be null or empty.
      */
     @Override
     public void setText(String text) {
@@ -290,9 +273,8 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     }
 
     /**
-     * @param infiniteProgressAdapter
-     *            an infiniteProgressAdapter to perform special drawing (ex: a
-     *            cancel button)
+     * @param infiniteProgressAdapter an infiniteProgressAdapter to perform special
+     *                                drawing (ex: a cancel button)
      */
     public void setInfiniteProgressAdapter(InfiniteProgressAdapter infiniteProgressAdapter) {
         this.infiniteProgressAdapter = infiniteProgressAdapter;
@@ -301,9 +283,8 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     /**
      * Adds a listener to the cancel button in this progress panel.
      * 
-     * @throws RuntimeException
-     *             if the infiniteProgressAdapter is null or is not a
-     *             CancelableProgessAdapter
+     * @throws RuntimeException if the infiniteProgressAdapter is null or is not a
+     *                          CancelableProgessAdapter
      * @param listener
      */
     @Override
@@ -311,16 +292,16 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
         if (infiniteProgressAdapter instanceof CancelableProgessAdapter) {
             ((CancelableProgessAdapter) infiniteProgressAdapter).addCancelListener(listener);
         } else {
-            throw new RuntimeException("Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
+            throw new RuntimeException(
+                    "Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
         }
     }
 
     /**
      * Removes a listener to the cancel button in this progress panel.
      * 
-     * @throws RuntimeException
-     *             if the infiniteProgressAdapter is null or is not a
-     *             CancelableProgessAdapter
+     * @throws RuntimeException if the infiniteProgressAdapter is null or is not a
+     *                          CancelableProgessAdapter
      * @param listener
      */
     @Override
@@ -328,13 +309,14 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
         if (infiniteProgressAdapter instanceof CancelableProgessAdapter) {
             ((CancelableProgessAdapter) infiniteProgressAdapter).removeCancelListener(listener);
         } else {
-            throw new RuntimeException("Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
+            throw new RuntimeException(
+                    "Expected CancelableProgessAdapter for cancel listener.  Adapter is " + infiniteProgressAdapter);
         }
     }
 
     /**
-     * Starts the waiting animation by fading the veil in, then rotating the
-     * shapes. This method handles the visibility of the glass pane.
+     * Starts the waiting animation by fading the veil in, then rotating the shapes.
+     * This method handles the visibility of the glass pane.
      */
     @Override
     public void start() {
@@ -349,9 +331,9 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     }
 
     /**
-     * Stops the waiting animation by stopping the rotation of the circular
-     * shape and then by fading out the veil. This methods sets the panel
-     * invisible at the end.
+     * Stops the waiting animation by stopping the rotation of the circular shape
+     * and then by fading out the veil. This methods sets the panel invisible at the
+     * end.
      */
     @Override
     public void stop() {
@@ -378,9 +360,9 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     }
 
     /**
-     * Interrupts the animation, whatever its state is. You can use it when you
-     * need to stop the animation without running the fade out phase. This
-     * methods sets the panel invisible at the end.
+     * Interrupts the animation, whatever its state is. You can use it when you need
+     * to stop the animation without running the fade out phase. This methods sets
+     * the panel invisible at the end.
      */
     public void interrupt() {
         if (animation != null) {
@@ -434,18 +416,12 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     /**
      * Draw text in a Graphics2D.
      * 
-     * @param text
-     *            the text to draw
-     * @param font
-     *            the font to use
-     * @param g2
-     *            the graphics context to draw in
-     * @param width
-     *            the width of the parent, so it can be centered
-     * @param y
-     *            the height at which to draw
-     * @param foreGround
-     *            the foreground color to draw in
+     * @param text       the text to draw
+     * @param font       the font to use
+     * @param g2         the graphics context to draw in
+     * @param width      the width of the parent, so it can be centered
+     * @param y          the height at which to draw
+     * @param foreGround the foreground color to draw in
      * @return the y value that is the y param + the text height.
      */
     public static double drawTextAt(String text, Font font, Graphics2D g2, int width, double y, Color foreGround) {
@@ -462,8 +438,8 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     }
 
     /**
-     * Ticker is not built until set bounds is called (or our width and height
-     * are > 0).
+     * Ticker is not built until set bounds is called (or our width and height are >
+     * 0).
      * 
      * @return null if not ready, or the built ticker
      */
@@ -476,8 +452,8 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
 
     /**
      * Builds the circular shape and returns the result as an array of
-     * <code>Area</code>. Each <code>Area</code> is one of the bars composing
-     * the shape.
+     * <code>Area</code>. Each <code>Area</code> is one of the bars composing the
+     * shape.
      */
     private void buildTicker() {
         Area[] areas = new Area[barsCount];
@@ -645,8 +621,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
             }
         }
     }
-    
-    
+
     private static int calculateValue(final double start, final double end, final double percent) {
         final int min = 0;
         final int max = 255;
@@ -671,5 +646,5 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
         int blue = calculateValue(start.getBlue(), end.getBlue(), percent);
 
         return new Color(red, green, blue);
-    }    
+    }
 }

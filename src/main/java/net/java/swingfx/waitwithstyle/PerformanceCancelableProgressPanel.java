@@ -3,11 +3,12 @@ package net.java.swingfx.waitwithstyle;
 import java.awt.event.ActionListener;
 
 /**
- * A progress panel with good performance that is cancelable instead of infinite.  The work is done by the
- * CancelableAdaptee.
+ * A progress panel with good performance that is cancelable instead of
+ * infinite. The work is done by the CancelableAdaptee.
  * <p>
- * Allows programatic cancelling (maybe useful for timeouts), and adding a listener to the user's cancel
- * so that the action the user is waiting on is stopped or ignored.
+ * Allows programatic cancelling (maybe useful for timeouts), and adding a
+ * listener to the user's cancel so that the action the user is waiting on is
+ * stopped or ignored.
  *
  * @author Michael Bushe michael@bushe.com
  */
@@ -37,7 +38,8 @@ public class PerformanceCancelableProgressPanel extends PerformanceInfiniteProgr
         setInfiniteProgressAdapter(createCancellableAdapter());
     }
 
-    public PerformanceCancelableProgressPanel(boolean i_bUseBackBuffer, CancelableProgessAdapter infiniteProgressAdapter) {
+    public PerformanceCancelableProgressPanel(boolean i_bUseBackBuffer,
+            CancelableProgessAdapter infiniteProgressAdapter) {
         super(i_bUseBackBuffer, infiniteProgressAdapter);
     }
 
@@ -45,12 +47,15 @@ public class PerformanceCancelableProgressPanel extends PerformanceInfiniteProgr
         super(numBars, infiniteProgressAdapter);
     }
 
-    public PerformanceCancelableProgressPanel(boolean i_bUseBackBuffer, int numBars, CancelableProgessAdapter infiniteProgressAdapter) {
+    public PerformanceCancelableProgressPanel(boolean i_bUseBackBuffer, int numBars,
+            CancelableProgessAdapter infiniteProgressAdapter) {
         super(i_bUseBackBuffer, numBars, infiniteProgressAdapter);
     }
 
     /**
-     * When not constructed with a CancelableProgressAdapter this method is called on construction to create one.
+     * When not constructed with a CancelableProgressAdapter this method is called
+     * on construction to create one.
+     * 
      * @return a cancellable adapter
      */
     protected CancelableProgessAdapter createCancellableAdapter() {
@@ -59,24 +64,29 @@ public class PerformanceCancelableProgressPanel extends PerformanceInfiniteProgr
 
     /**
      * Add a cancel listener to be called back when the user cancels the progress.
-     * @param listener some listener that wants to take action on cancel (like stop whatever was being waited for)
+     * 
+     * @param listener some listener that wants to take action on cancel (like stop
+     *                 whatever was being waited for)
      */
     public void addCancelListener(ActionListener listener) {
-        ((CancelableProgessAdapter)infiniteProgressAdapter).addCancelListener(listener);
+        ((CancelableProgessAdapter) infiniteProgressAdapter).addCancelListener(listener);
     }
 
     /**
-     * Remove a cancel listener that would be called back when the user cancels the progress.
-     * @param listener some listener that wants to take action on cancel (like stop whatever was being waited for)
+     * Remove a cancel listener that would be called back when the user cancels the
+     * progress.
+     * 
+     * @param listener some listener that wants to take action on cancel (like stop
+     *                 whatever was being waited for)
      */
     public void removeCancelListener(ActionListener listener) {
-        ((CancelableProgessAdapter)infiniteProgressAdapter).removeCancelListener(listener);
+        ((CancelableProgessAdapter) infiniteProgressAdapter).removeCancelListener(listener);
     }
 
     /**
      * Programmaticlly click the cancel button. Can be called from any thread.
      */
     public void doCancel() {
-        ((CancelableProgessAdapter)infiniteProgressAdapter).doCancel();
+        ((CancelableProgessAdapter) infiniteProgressAdapter).doCancel();
     }
 }
