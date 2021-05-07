@@ -658,7 +658,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
             try {
                 SwingUtilities.invokeAndWait(r);
             } catch (InterruptedException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+                // Accept interruption
             }
         }
     }
