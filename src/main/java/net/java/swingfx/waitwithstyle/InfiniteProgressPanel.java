@@ -29,7 +29,6 @@
 package net.java.swingfx.waitwithstyle;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -143,7 +142,7 @@ public class InfiniteProgressPanel extends JComponent implements CancelableAdapt
     protected InfiniteProgressAdapter infiniteProgressAdapter = null;
 
     private static Color colorNormal = new Color(200, 200, 200);
-    private static Color colorFocus = new Color(204, 22, 188);
+    private static Color colorFocus = new Color(22, 22, 188);
 
     /**
      * Creates a new progress panel with default values:<br />
